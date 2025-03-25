@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +8,45 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-    
+    <style>
+        .pdf-names-input-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .pdf-names-input-section textarea {
+            width: 100%;
+            min-height: 100px;
+            margin-bottom: 10px;
+        }
+        .selection-results {
+            margin-top: 15px;
+        }
+        .selection-results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .selection-results li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #eee;
+            margin-bottom: 5px;
+        }
+        .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
 </head>
-
 <body>    
-    <div class = joiner-container>
+    <div class="joiner-container">
         <div class="header">
             <h2>PDF Unitron</h2>
             <p>Selecciona varios PDFs para unirlos en un solo archivo</p>
@@ -30,12 +63,9 @@
             <div id="pdfListInfo" class="info-text">Añade PDFs a unir</div>
             <ul id="pdfList" class="pdf-list"></ul>
         </div>
-
     </div>
 
-    <script src="pdf-joiner.js"></script>
-
-    <div class = "modification-container">
+    <div class="modification-container">
         <div class="header">
             <h2>PDF Eliminatron</h2>
             <p>Selecciona un archivo PDF para ver sus páginas y seleccionar las que quieras eliminar</p>
@@ -55,7 +85,7 @@
     </div>
 
     <script src="pdf-editor.js"></script>
-    
+    <script src="pdf-joiner.js"></script>
+    <script src="pdf-selector.js"></script>
 </body>
-
 </html>
