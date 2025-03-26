@@ -17,6 +17,13 @@ function initPdfSelector() {
     errorContainer.style.marginTop = '10px';
     selectedFilesList.parentNode.insertBefore(errorContainer, selectedFilesList);
 
+    // Create PDFs Found Counter
+    const pdfsFoundCounter = document.createElement('p');
+    pdfsFoundCounter.id = 'pdfsFoundCounter';
+    pdfsFoundCounter.style.fontWeight = 'bold';
+    pdfsFoundCounter.style.marginTop = '10px';
+    selectedFilesList.parentNode.insertBefore(pdfsFoundCounter, selectedFilesList);
+
     // Create Clear All button
     const clearAllButton = document.createElement('button');
     clearAllButton.id = 'clearAllPdfsButton';
@@ -33,6 +40,7 @@ function initPdfSelector() {
         selectedPdfs = [];
         selectedFilesList.innerHTML = '';
         errorContainer.innerHTML = '';
+        pdfsFoundCounter.textContent = '';
         joinPdfsButton.disabled = true;
         clearAllButton.style.display = 'none';
     });
@@ -57,6 +65,7 @@ function initPdfSelector() {
         selectedPdfs = [];
         selectedFilesList.innerHTML = '';
         errorContainer.innerHTML = '';
+        pdfsFoundCounter.textContent = '';
         joinPdfsButton.disabled = true;
         clearAllButton.style.display = 'none';
 
@@ -146,6 +155,7 @@ function initPdfSelector() {
             selectedPdfs = [];
             joinPdfsButton.disabled = true;
             clearAllButton.style.display = 'none';
+            pdfsFoundCounter.textContent = ''; // Clear counter on error
         } else {
             // Show matched files
             selectedPdfs.forEach(matchedFile => {
@@ -156,6 +166,9 @@ function initPdfSelector() {
                 `;
                 selectedFilesList.appendChild(listItem);
             });
+
+            // Update PDFs found counter
+            pdfsFoundCounter.textContent = `PDFs encontrados: ${selectedPdfs.length}`;
 
             // Update join button state
             joinPdfsButton.disabled = selectedPdfs.length < 2;
@@ -169,14 +182,56 @@ function initPdfSelector() {
                     this.closest('li').remove();
                     joinPdfsButton.disabled = selectedPdfs.length < 2;
                     clearAllButton.style.display = selectedPdfs.length > 0 ? 'inline-block' : 'none';
+                    
+                    // Update PDFs found counter when removing files
+                    pdfsFoundCounter.textContent = `PDFs encontrados: ${selectedPdfs.length}`;
                 });
             });
         }
     });
 
-    // Join functionality remains the same as in previous version
+    // Placeholder for join functionality (you'll need to implement this)
     joinPdfsButton.addEventListener('click', async function () {
-        // ... (rest of the code remains unchanged)
+        if (selectedPdfs.length < 2) {
+            alert('Selecciona al menos dos PDFs para unir.');
+            return;
+        }
+
+        try {
+            const { PDFDocument } = PDFLib;
+            const mergedPdf = await PDFDocument.create();
+
+            // Add pages from each PDF
+            for (const pdfFile of selectedPdfs) {
+                const arrayBuffer = await pdfFile.arrayBuffer();
+                const pdfDoc = await PDFDocument.load(arrayBuffer);
+                const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                pages.forEach(page => mergedPdf.addPage(page));
+            }
+
+            // Save the merged PDF
+            const mergedPdfBytes = await mergedPdf.save();
+
+            // Generate filename based on first two PDFs
+            /*const baseName = selectedPdfs.slice(0, 2)
+                .map(file => file.name.replace('.pdf', ''))
+                .join('_');
+                
+            const joinedPdfName = `${baseName}_joined.pdf`;
+            */
+            const joinedPdfName = `Selector-joined.pdf`;
+
+            // Trigger download
+            const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = joinedPdfName;
+            link.click();
+
+        } catch (error) {
+            console.error('Error uniendo PDFs:', error);
+            alert('Error al unir PDFs. Intenta de nuevo.');
+        }
     });
 }
 
