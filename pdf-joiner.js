@@ -4,8 +4,6 @@ let joinedPdfName = "joined-document.pdf";
 
 // Initialize joiner functionality
 function initPdfJoiner() {
-    // Create UI elements for PDF joiner
-    createJoinerUI();
     
     // Add event listeners
     document.getElementById('addPdfButton').addEventListener('click', () => {
@@ -15,87 +13,6 @@ function initPdfJoiner() {
     document.getElementById('joinPdfInput').addEventListener('change', handlePdfAdd);
     document.getElementById('joinButton').addEventListener('click', joinPdfs);
     document.getElementById('clearPdfsButton').addEventListener('click', clearPdfs);
-}
-
-// Create UI elements for PDF joiner
-function createJoinerUI() {
-    
-    // Add CSS for joiner
-    const style = document.createElement('style');
-    style.textContent = `
-        .joiner-container {
-            margin-top: 60px;
-        }
-        .pdf-list-container {
-            margin-top: 20px;
-        }
-        .pdf-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .pdf-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        .pdf-info {
-            display: flex;
-            align-items: center;
-        }
-        .pdf-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            color: #f44336;
-        }
-        .pdf-name {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        .pdf-size {
-            color: #777;
-            font-size: 0.9em;
-        }
-        .pdf-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .move-btn, .remove-btn {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .move-btn:hover, .remove-btn:hover {
-            background-color: #e0e0e0;
-        }
-        .remove-btn {
-            color: #f44336;
-        }
-        .clear-btn {
-            background-color: #ff9800;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            border: none;
-            margin-left: 10px;
-        }
-        .clear-btn:hover {
-            background-color: #e68a00;
-        }
-    `;
-    
-    // Add elements to DOM
-    document.head.appendChild(style);
 }
 
 // Handle PDF file addition
@@ -140,7 +57,7 @@ async function handlePdfAdd(event) {
             joinButton.disabled = pdfsToJoin.length < 2;
             
             // Update info text
-            pdfListInfo.textContent = `${pdfsToJoin.length} PDF${pdfsToJoin.length !== 1 ? 's' : ''} ready to join`;
+            pdfListInfo.textContent = `${pdfsToJoin.length} PDF${pdfsToJoin.length !== 1 ? 's' : ''} listos para unir`;
             
         } catch (error) {
             console.error('Error adding PDF:', error);
@@ -169,7 +86,7 @@ function updatePdfList() {
             <div class="pdf-actions">
                 ${index > 0 ? `<button class="move-btn move-up" data-index="${index}">↑</button>` : ''}
                 ${index < pdfsToJoin.length - 1 ? `<button class="move-btn move-down" data-index="${index}">↓</button>` : ''}
-                <button class="remove-btn" data-index="${index}">Remove</button>
+                <button class="remove-btn" data-index="${index}">Quitar</button>
             </div>
         `;
         
@@ -215,9 +132,9 @@ function removePdf(index) {
     
     const pdfListInfo = document.getElementById('pdfListInfo');
     if (pdfsToJoin.length === 0) {
-        pdfListInfo.textContent = 'Add PDF files to join';
+        pdfListInfo.textContent = 'Añade PDFs para unir';
     } else {
-        pdfListInfo.textContent = `${pdfsToJoin.length} PDF${pdfsToJoin.length !== 1 ? 's' : ''} ready to join`;
+        pdfListInfo.textContent = `${pdfsToJoin.length} PDF${pdfsToJoin.length !== 1 ? 's' : ''} listos para unir`;
     }
 }
 
@@ -230,21 +147,21 @@ function clearPdfs() {
     joinButton.disabled = true;
     
     const pdfListInfo = document.getElementById('pdfListInfo');
-    pdfListInfo.textContent = 'Add PDF files to join';
+    pdfListInfo.textContent = 'Añade PDFs a unir';
 }
 
 // Join PDFs
 async function joinPdfs() {
     if (pdfsToJoin.length < 2) {
-        alert('Add at least two PDFs to join.');
+        alert('Añade al menos 2 PDFs.');
         return;
     }
     
     const loader = document.getElementById('loader');
-    const infoText = document.getElementById('infoText');
+    const infoText = document.getElementById('pdfListInfo');
     
     loader.classList.remove('hidden');
-    infoText.textContent = 'Creating joined PDF...';
+    infoText.textContent = 'Creando joined PDF...';
     
     try {
         // Create a new PDF document

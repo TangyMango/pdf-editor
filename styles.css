@@ -325,3 +325,72 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+/*PDF JOINER STYLES*/
+.pdf-list-container {
+    margin-top: 20px;
+}
+.pdf-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.pdf-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.pdf-info {
+    display: flex;
+    align-items: center;
+}
+.pdf-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    color: #f44336;
+}
+.pdf-name {
+    margin-right: 10px;
+    font-weight: bold;
+}
+.pdf-size {
+    color: #777;
+    font-size: 0.9em;
+}
+.pdf-actions {
+    display: flex;
+    gap: 10px;
+}
+.move-btn, .remove-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.move-btn:hover, .remove-btn:hover {
+    background-color: #e0e0e0;
+}
+.remove-btn {
+    color: #f44336;
+}
+.clear-btn {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    margin-left: 10px;
+}
+.clear-btn:hover {
+    background-color: #e68a00;
+}
