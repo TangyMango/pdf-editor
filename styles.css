@@ -1,3 +1,42 @@
+.joiner-container {
+    margin-top: 10px;
+}
+
+#joiner-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#joiner-header-container > div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#joiner-header-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+#joiner-header-title {
+    color: #333;
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+#joiner-header-subtitle {
+    color: #666;
+    margin: 5px 0 0;
+    font-size: 1rem;
+}
+
 body {
     font-family: Arial, sans-serif;
     max-width: 1200px;
@@ -43,13 +82,27 @@ body {
     margin-left: 10px;
 }
 
+#joinPdfsButton:hover,
 .save-btn:hover {
     background-color: #0b7dda;
 }
 
+#joinPdfsButton:disabled,
 .save-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+#joinPdfsButton {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .thumbnails-container {
@@ -165,22 +218,30 @@ body {
 
 /* Styles for PDF Selector section */
 .pdf-selector-container {
+    
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    background-color: white;
-    padding: 30px;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+.pdf-selector-main-container {
+    border-top: 2px dashed #ccc;
+    margin-top: 60px;
+    padding-top: 30px;
+
 }
 
 .pdf-names-input-section {
     display: flex;
     flex-direction: column;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    /*background-color: #f9f9f9;*/
+    /*border: 1px solid #ddd;*/
     border-radius: 8px;
-    padding: 25px;
+    padding-right: 25px;
+    padding-left: 25px;
 }
 
 .pdf-names-input-section h3 {
@@ -189,14 +250,15 @@ body {
     margin-bottom: 20px;
 }
 
-.pdf-names-input-section p {
+.pdf-names-input-section p, 
+.selection-results p {
     margin-bottom: 10px;
     color: #666;
 }
 
 .pdf-names-input-section textarea {
     width: 100%;
-    min-height: 200px;
+    min-height: 100px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -227,9 +289,10 @@ body {
 
 .selection-results-column {
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     border-radius: 8px;
     padding: 25px;
+    /*width: 450px;*/
 }
 
 .selection-results h3 {
@@ -247,6 +310,7 @@ body {
 .selection-results li {
     display: flex;
     justify-content: space-between;
+    font-size: small;
     align-items: center;
     background-color: white;
     border: 1px solid #ddd;

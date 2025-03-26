@@ -1,31 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Editron</title>
+    <title>PDF Editor</title>
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
-<body>    
+
+<body>
     <div class="joiner-container">
+
+        <div id="joiner-header-container">
+            <div id="joiner-header-content">
+                <img id="joiner-header-icon" src="icon.png" alt="PDF Editor Icon" width="60" height="60">
+                <div id="joiner-header-text">
+                    <h1 id="joiner-header-title">PDF Editor</h1>
+                    <p id="joiner-header-subtitle">Easily manage and edit your PDF files</p>
+                </div>
+            </div>
+        </div>
+
         <div class="header">
             <h2>PDF Unitron</h2>
             <p>Selecciona varios PDFs para unirlos en un solo archivo</p>
         </div>
-        
+
         <div class="upload-container">
             <input type="file" id="joinPdfInput" class="file-input" accept="application/pdf" multiple>
             <label for="joinPdfInput" id="addPdfButton" class="file-label">Añadir PDFs</label>
             <button id="joinButton" class="save-btn" disabled>Unir PDFs</button>
             <button id="clearPdfsButton" class="clear-btn">Borrar Todo</button>
         </div>
-        
+
         <div id="pdfListContainer" class="pdf-list-container">
             <div id="pdfListInfo" class="info-text">Añade PDFs a unir</div>
             <ul id="pdfList" class="pdf-list"></ul>
+        </div>
+    </div>
+
+    <div class="pdf-selector-main-container">
+        <div class="header">
+            <h2>PDF Selector</h2>
+            <p>Pega el nombre de los PDFs de una determinada carpeta para buscarlos y unirlos en un solo archivo</p>
+        </div>
+        <div class="pdf-selector-container">
+
+            <div class="pdf-names-input-section">
+                <p>1. Pega los nombres de los archivos PDF</p>
+                <textarea id="pdfNamesInput" placeholder="Pega el nombre de los PDFs, uno por cada renglón"></textarea>
+                <p>2. Selecciona la carpeta donde están los PDFs</p>
+                <input type="file" id="folderInput" webkitdirectory directory multiple>
+                <p>3. Presiona el botón para buscar los PDFs</p>
+                <button id="selectPdfsButton">Buscar PDFs</button>
+            </div>
+
+            <div class="selection-results-column">
+                <div class="selection-results">
+                    <h3>PDFs Seleccionados</h3>
+                    <p>4. Verifica la presencia y el orden</p>
+                    <div id="selectedPdfsContainer">
+                        <ul id="selectedFilesList"></ul>
+                    </div>
+                    <p>5. Une los PDFs</p>
+                    <button id="joinPdfsButton" disabled>Unir</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -34,17 +77,17 @@
             <h2>PDF Eliminatron</h2>
             <p>Selecciona un archivo PDF para ver sus páginas y seleccionar las que quieras eliminar</p>
         </div>
-    
+
         <div class="upload-container">
             <input type="file" id="fileInput" class="file-input" accept="application/pdf">
             <label for="fileInput" class="file-label">Seleccionar PDF</label>
             <button id="saveButton" class="save-btn" disabled>Guardar PDF</button>
             <button id="clearButton" class="clear-btn">Borrar Todo</button>
         </div>
-    
+
         <div id="loader" class="loader hidden"></div>
         <div id="infoText" class="info-text">Selecciona un PDF para comenzar</div>
-    
+
         <div id="thumbnailsContainer" class="thumbnails-container"></div>
     </div>
 
@@ -52,4 +95,5 @@
     <script src="pdf-joiner.js"></script>
     <script src="pdf-selector.js"></script>
 </body>
+
 </html>
