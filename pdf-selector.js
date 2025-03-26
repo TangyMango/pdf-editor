@@ -4,19 +4,53 @@ let pdfNamesToMatch = [];
 // Add PDF Names Input to the page dynamically
 function addPdfNamesInput() {
     const container = document.querySelector('.joiner-container');
+    
+    // Create two-column container
+    const pdfSelectorContainer = document.createElement('div');
+    pdfSelectorContainer.className = 'pdf-selector-container';
+    
+    // First column - PDF Names Input
     const namesInputDiv = document.createElement('div');
     namesInputDiv.innerHTML = `
         <div class="pdf-names-input-section">
             <h3>Selector de PDFs por Nombre</h3>
+            <p>1. Pega los nombres de los archivos PDF</p>
             <textarea id="pdfNamesInput" placeholder="Pega el nombre de los PDFs, uno por cada renglón"></textarea>
+            <p>2. Selecciona la carpeta con los PDFs</p>
             <input type="file" id="folderInput" webkitdirectory directory multiple>
+            <p>3. Presiona el botón para buscar los PDFs</p>
             <button id="selectPdfsButton">Buscar PDFs</button>
         </div>
     `;
-    container.insertBefore(namesInputDiv, container.firstChild.nextSibling);
+    
+    // Second column - Selected PDFs
+    const selectedPdfsColumn = document.createElement('div');
+    selectedPdfsColumn.className = 'selection-results-column';
+    selectedPdfsColumn.innerHTML = `
+        <div class="selection-results">
+            <h3>PDFs Seleccionados</h3>
+            <div id="selectedPdfsContainer">
+                <ul id="selectedFilesList"></ul>
+            </div>
+            <button id="joinPdfsButton" disabled>Unir PDFs</button>
+        </div>
+    `;
+    
+    // Add columns to container
+    pdfSelectorContainer.appendChild(namesInputDiv);
+    pdfSelectorContainer.appendChild(selectedPdfsColumn);
+    
+    // Insert into the page
+    container.insertBefore(pdfSelectorContainer, container.firstChild.nextSibling);
 
     // Event listener for PDF names input
-    document.getElementById('pdfNamesInput').addEventListener('input', function () {
+    const pdfNamesInput = document.getElementById('pdfNamesInput');
+    const folderInput = document.getElementById('folderInput');
+    const selectPdfsButton = document.getElementById('selectPdfsButton');
+    const selectedFilesList = document.getElementById('selectedFilesList');
+    const joinPdfsButton = document.getElementById('joinPdfsButton');
+
+    pdfNamesInput.addEventListener('input', function () {
         // Parse input into array of names, trimming whitespace and removing empty lines
         pdfNamesToMatch = this.value.split('\n')
             .map(name => name.trim())
@@ -24,14 +58,12 @@ function addPdfNamesInput() {
     });
 
     // Event listener for selecting PDFs
-    document.getElementById('selectPdfsButton').addEventListener('click', function () {
-        const folderInput = document.getElementById('folderInput');
+    selectPdfsButton.addEventListener('click', function () {
         const files = folderInput.files;
 
         // Clear previous selections
         selectedPdfs = [];
-        const selectedFilesList = document.createElement('ul');
-        selectedFilesList.id = 'selectedFilesList';
+        selectedFilesList.innerHTML = '';
         
         // If no PDF names are provided, alert user
         if (pdfNamesToMatch.length === 0) {
@@ -69,28 +101,8 @@ function addPdfNamesInput() {
             }
         });
 
-        // Create container for selected files list and join button
-        const selectionResultsDiv = document.createElement('div');
-        selectionResultsDiv.className = 'selection-results';
-        selectionResultsDiv.innerHTML = `
-            <h3>PDFs Seleccionados</h3>
-        `;
-        selectionResultsDiv.appendChild(selectedFilesList);
-
-        const joinPdfsButton = document.createElement('button');
-        joinPdfsButton.id = 'joinPdfsButton';
-        joinPdfsButton.textContent = 'Unir PDFs';
+        // Update join button state
         joinPdfsButton.disabled = selectedPdfs.length < 2;
-        selectionResultsDiv.appendChild(joinPdfsButton);
-
-        // Remove any existing selection results
-        const existingResults = document.querySelector('.selection-results');
-        if (existingResults) {
-            existingResults.remove();
-        }
-
-        // Add new selection results
-        document.querySelector('.pdf-names-input-section').appendChild(selectionResultsDiv);
 
         // Add remove functionality to remove buttons
         document.querySelectorAll('.remove-btn').forEach(btn => {
@@ -102,52 +114,52 @@ function addPdfNamesInput() {
             });
         });
 
-        // Add join functionality
-        joinPdfsButton.addEventListener('click', async function () {
-            if (selectedPdfs.length < 2) {
-                alert('Selecciona al menos dos PDFs para unir.');
-                return;
-            }
-
-            try {
-                const { PDFDocument } = PDFLib;
-                const mergedPdf = await PDFDocument.create();
-
-                // Add pages from each PDF
-                for (const pdfFile of selectedPdfs) {
-                    const arrayBuffer = await pdfFile.arrayBuffer();
-                    const pdfDoc = await PDFDocument.load(arrayBuffer);
-                    const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-                    pages.forEach(page => mergedPdf.addPage(page));
-                }
-
-                // Save the merged PDF
-                const mergedPdfBytes = await mergedPdf.save();
-
-                // Generate filename based on first two PDFs
-                const baseName = selectedPdfs.slice(0, 2)
-                    .map(file => file.name.replace('.pdf', ''))
-                    .join('_');
-                const joinedPdfName = `${baseName}_joined.pdf`;
-
-                // Trigger download
-                const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = joinedPdfName;
-                link.click();
-
-            } catch (error) {
-                console.error('Error uniendo PDFs:', error);
-                alert('Error al unir PDFs. Intenta de nuevo.');
-            }
-        });
-
         // Show results
         if (selectedPdfs.length === 0) {
             alert('No se encontraron PDFs coincidentes. Verifica los nombres e intenta de nuevo.');
         } else {
             console.log(`Se encontraron ${selectedPdfs.length} PDFs coincidentes`);
+        }
+    });
+
+    // Add join functionality
+    joinPdfsButton.addEventListener('click', async function () {
+        if (selectedPdfs.length < 2) {
+            alert('Selecciona al menos dos PDFs para unir.');
+            return;
+        }
+
+        try {
+            const { PDFDocument } = PDFLib;
+            const mergedPdf = await PDFDocument.create();
+
+            // Add pages from each PDF
+            for (const pdfFile of selectedPdfs) {
+                const arrayBuffer = await pdfFile.arrayBuffer();
+                const pdfDoc = await PDFDocument.load(arrayBuffer);
+                const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                pages.forEach(page => mergedPdf.addPage(page));
+            }
+
+            // Save the merged PDF
+            const mergedPdfBytes = await mergedPdf.save();
+
+            // Generate filename based on first two PDFs
+            const baseName = selectedPdfs.slice(0, 2)
+                .map(file => file.name.replace('.pdf', ''))
+                .join('_');
+            const joinedPdfName = `${baseName}_joined.pdf`;
+
+            // Trigger download
+            const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = joinedPdfName;
+            link.click();
+
+        } catch (error) {
+            console.error('Error uniendo PDFs:', error);
+            alert('Error al unir PDFs. Intenta de nuevo.');
         }
     });
 }
