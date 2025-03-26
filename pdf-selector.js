@@ -24,7 +24,7 @@ function initPdfSelector() {
         // Clear previous selections
         selectedPdfs = [];
         selectedFilesList.innerHTML = '';
-        
+
         // If no PDF names are provided, alert user
         if (pdfNamesToMatch.length === 0) {
             alert('Por favor, pega los nombres de los PDFs primero');

@@ -34,25 +34,25 @@ async function handleFileSelect(event) {
     fileBlob = file; // Store the original file blob
     deletedPages.clear();
     thumbnailsContainer.innerHTML = '';
-    
+
     // Show loader
     loader.classList.remove('hidden');
     infoText.textContent = 'Loading PDF...';
-    
+
     try {
         // Read file as ArrayBuffer for PDF.js
         const arrayBuffer = await readFileAsArrayBuffer(file);
-        
+
         // Store a copy of the bytes
         pdfBytes = new Uint8Array(arrayBuffer.slice(0));
-        
+
         // Load PDF document
         pdfDocument = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
         totalPages = pdfDocument.numPages;
-        
+
         infoText.textContent = `PDF loaded successfully. Total pages: ${totalPages}`;
         saveButton.disabled = false;
-        
+
         // Generate thumbnails
         await generateThumbnails(pdfDocument);
     } catch (error) {
@@ -77,46 +77,46 @@ function readFileAsArrayBuffer(file) {
 async function generateThumbnails(pdfDoc) {
     thumbnailsContainer.innerHTML = '';
     loader.classList.remove('hidden');
-    
+
     for (let i = 1; i <= pdfDoc.numPages; i++) {
         try {
             const page = await pdfDoc.getPage(i);
             const viewport = page.getViewport({ scale: 0.5 });
-            
+
             // Create thumbnail container
             const thumbnailItem = document.createElement('div');
             thumbnailItem.className = 'thumbnail-item';
             thumbnailItem.dataset.pageNumber = i;
-            
+
             // Create canvas for the thumbnail
             const canvas = document.createElement('canvas');
             canvas.className = 'thumbnail';
             const context = canvas.getContext('2d');
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-            
+
             // Render page to canvas
             await page.render({
                 canvasContext: context,
                 viewport: viewport
             }).promise;
-            
+
             // Create thumbnail footer
             const thumbnailFooter = document.createElement('div');
             thumbnailFooter.className = 'thumbnail-footer';
-            
+
             const pageNumber = document.createElement('span');
             pageNumber.className = 'page-number';
             pageNumber.textContent = `Página ${i}`;
-            
+
             const deleteButton = document.createElement('button');
             deleteButton.className = 'delete-btn';
             deleteButton.textContent = 'Eliminar';
             deleteButton.addEventListener('click', () => togglePageDeletion(i, thumbnailItem));
-            
+
             thumbnailFooter.appendChild(pageNumber);
             thumbnailFooter.appendChild(deleteButton);
-            
+
             thumbnailItem.appendChild(canvas);
             thumbnailItem.appendChild(thumbnailFooter);
             thumbnailsContainer.appendChild(thumbnailItem);
@@ -124,7 +124,7 @@ async function generateThumbnails(pdfDoc) {
             console.error(`Error rendering thumbnail for page ${i}:`, error);
         }
     }
-    
+
     loader.classList.add('hidden');
 }
 
@@ -132,7 +132,7 @@ async function generateThumbnails(pdfDoc) {
 function togglePageDeletion(pageNumber, thumbnailItem) {
     if (deletedPages.has(pageNumber)) {
         deletedPages.delete(pageNumber);
-        
+
         // Remove overlay if it exists
         const overlay = thumbnailItem.querySelector('.thumbnail-overlay');
         if (overlay) {
@@ -140,14 +140,14 @@ function togglePageDeletion(pageNumber, thumbnailItem) {
         }
     } else {
         deletedPages.add(pageNumber);
-        
+
         // Add overlay
         const overlay = document.createElement('div');
         overlay.className = 'thumbnail-overlay';
         overlay.textContent = 'ELIMINADA';
         thumbnailItem.insertBefore(overlay, thumbnailItem.firstChild);
     }
-    
+
     // Update info text
     if (deletedPages.size > 0) {
         infoText.textContent = `${deletedPages.size} páginas marcadas para eliminación`;
@@ -168,15 +168,15 @@ async function saveModifiedPDF() {
     loader.classList.remove('hidden');
     infoText.textContent = 'Crreando PDF moificado...';
     saveButton.disabled = true;
-    
+
     try {
         // Read original file again for PDF-lib
         const fileArrayBuffer = await readFileAsArrayBuffer(fileBlob);
-        
+
         // Create new PDF document
         const { PDFDocument } = PDFLib;
         const pdfDoc = await PDFDocument.load(fileArrayBuffer);
-        
+
         // Get indices of pages to keep
         const pagesToKeep = [];
         for (let i = 0; i < totalPages; i++) {
@@ -184,23 +184,23 @@ async function saveModifiedPDF() {
                 pagesToKeep.push(i);
             }
         }
-        
+
         // Create new document with only kept pages
         const newPdfDoc = await PDFDocument.create();
         const copiedPages = await newPdfDoc.copyPages(pdfDoc, pagesToKeep);
-        
+
         // Add copied pages to new document
         copiedPages.forEach(page => {
             newPdfDoc.addPage(page);
         });
-        
+
         // Save the modified PDF
         const modifiedPdfBytes = await newPdfDoc.save();
-        
+
         // Download the modified PDF
         const fileName = pdfName.replace('.pdf', '-modificado.pdf');
         downloadPDF(modifiedPdfBytes, fileName);
-        
+
         infoText.textContent = 'Modificación exitosa';
     } catch (error) {
         console.error('Error saving modified PDF:', error);

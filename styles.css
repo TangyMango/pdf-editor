@@ -12,7 +12,7 @@
     margin-bottom: 20px;
 }
 
-#joiner-header-container > div {
+#joiner-header-container>div {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -218,7 +218,7 @@ body {
 
 /* Styles for PDF Selector section */
 .pdf-selector-container {
-    
+
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
@@ -250,7 +250,7 @@ body {
     margin-bottom: 20px;
 }
 
-.pdf-names-input-section p, 
+.pdf-names-input-section p,
 .selection-results p {
     margin-bottom: 10px;
     color: #666;
@@ -291,7 +291,9 @@ body {
     background-color: #f9f9f9;
     /*border: 1px solid #ddd;*/
     border-radius: 8px;
-    padding: 25px;
+    padding-right: 25px;
+    padding-left: 25px;
+    /*padding: 25px;*/
     /*width: 450px;*/
 }
 
@@ -331,11 +333,13 @@ body {
 .pdf-list-container {
     margin-top: 20px;
 }
+
 .pdf-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 .pdf-list-item {
     display: flex;
     justify-content: space-between;
@@ -346,41 +350,52 @@ body {
     border-radius: 4px;
     margin-bottom: 10px;
 }
+
 .pdf-info {
     display: flex;
     align-items: center;
 }
+
 .pdf-icon {
     width: 24px;
     height: 24px;
     margin-right: 10px;
     color: #f44336;
 }
+
 .pdf-name {
     margin-right: 10px;
     font-weight: bold;
 }
+
 .pdf-size {
     color: #777;
     font-size: 0.9em;
 }
+
 .pdf-actions {
     display: flex;
     gap: 10px;
 }
-.move-btn, .remove-btn {
+
+.move-btn,
+.remove-btn {
     background-color: #f0f0f0;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 5px 10px;
     cursor: pointer;
 }
-.move-btn:hover, .remove-btn:hover {
+
+.move-btn:hover,
+.remove-btn:hover {
     background-color: #e0e0e0;
 }
+
 .remove-btn {
     color: #f44336;
 }
+
 .clear-btn {
     background-color: #ff9800;
     color: white;
@@ -391,6 +406,7 @@ body {
     border: none;
     margin-left: 10px;
 }
+
 .clear-btn:hover {
     background-color: #e68a00;
 }
