@@ -9,6 +9,33 @@ function initPdfSelector() {
     const selectedFilesList = document.getElementById('selectedFilesList');
     const joinPdfsButton = document.getElementById('joinPdfsButton');
 
+    // Create Clear All button
+    const clearAllButton = document.createElement('button');
+    clearAllButton.id = 'clearAllPdfsButton';
+    clearAllButton.textContent = 'Eliminar Todos';
+    clearAllButton.classList.add('clear-btn');
+    clearAllButton.style.marginLeft = '10px';
+    clearAllButton.style.display = 'none'; // Initially hidden
+
+    // Add Clear All button to the container
+    const selectedPdfsContainer = document.getElementById('selectedPdfsContainer');
+    selectedPdfsContainer.insertBefore(clearAllButton, selectedFilesList);
+
+    // Event listener for Clear All button
+    clearAllButton.addEventListener('click', function() {
+        // Clear the selectedPdfs array
+        selectedPdfs = [];
+
+        // Clear the list of selected files
+        selectedFilesList.innerHTML = '';
+
+        // Disable join button
+        joinPdfsButton.disabled = true;
+
+        // Hide Clear All button
+        clearAllButton.style.display = 'none';
+    });
+
     // Event listener for PDF names input
     pdfNamesInput.addEventListener('input', function () {
         // Parse input into array of names, trimming whitespace and removing empty lines
@@ -64,6 +91,9 @@ function initPdfSelector() {
         // Update join button state
         joinPdfsButton.disabled = selectedPdfs.length < 2;
 
+        // Show/hide Clear All button based on selections
+        clearAllButton.style.display = selectedPdfs.length > 0 ? 'inline-block' : 'none';
+
         // Add remove functionality to remove buttons
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', function () {
@@ -71,6 +101,9 @@ function initPdfSelector() {
                 selectedPdfs = selectedPdfs.filter(file => file.name !== fileName);
                 this.closest('li').remove();
                 joinPdfsButton.disabled = selectedPdfs.length < 2;
+
+                // Update Clear All button visibility
+                clearAllButton.style.display = selectedPdfs.length > 0 ? 'inline-block' : 'none';
             });
         });
 
